@@ -59,10 +59,27 @@ function extractContentDiv(html: string): string {
   try {
     const dom = new JSDOM(html);
     const contentDiv = dom.window.document.getElementById('CONTENT');
-    return contentDiv?.outerHTML || html;
+    
+    if (contentDiv) {
+      return wrapInHtmlPage(contentDiv.outerHTML);
+    }
+    
+    return html;
   } catch {
     return html;
   }
+}
+
+function wrapInHtmlPage(content: string): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+    <title>Content</title>
+</head>
+<body>
+    ${content}
+</body>
+</html>`;
 }
 
 function expandPath(path: string): string {
